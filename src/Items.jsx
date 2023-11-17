@@ -3,15 +3,18 @@ import SingleItem from './SingleItem';
 import customFetch from './utils';
 
 const Items = ({ items }) => {
-  const result = useQuery({
+  const { isLoading, data } = useQuery({
     queryKey: ['tasks'],
     queryFn: () => customFetch.get('/'),
   });
-  console.log(result);
+
+  if (isLoading) {
+    return <p style={{ marginTop: '1rem' }}>loading...</p>;
+  }
 
   return (
     <div className="items">
-      {items.map((item) => {
+      {data.data.taskList.map((item) => {
         return <SingleItem key={item.id} item={item} />;
       })}
     </div>
