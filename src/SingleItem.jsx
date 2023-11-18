@@ -1,8 +1,15 @@
+import { useMutation } from '@tanstack/react-query';
+import customFetch from './utils';
+
 const SingleItem = ({ item }) => {
+  const { mutate: EditTask } = useMutation({
+    mutationFn: () => customFetch.patch(`/${item.id}`, {}),
+  });
+
   return (
-    <div className='single-item'>
+    <div className="single-item">
       <input
-        type='checkbox'
+        type="checkbox"
         checked={item.isDone}
         onChange={() => console.log('edit task')}
       />
@@ -15,8 +22,8 @@ const SingleItem = ({ item }) => {
         {item.title}
       </p>
       <button
-        className='btn remove-btn'
-        type='button'
+        className="btn remove-btn"
+        type="button"
         onClick={() => console.log('delete task')}
       >
         delete
