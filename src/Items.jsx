@@ -16,10 +16,6 @@ const Items = () => {
     return <p style={{ marginTop: '1rem' }}>there was an error</p>;
   }
 
-  // if (error) {
-  //   return <p style={{ marginTop: '1rem' }}>{error.response.data}</p>;
-  // }
-
   return (
     <div className="items">
       {data.data.taskList.map((item) => {
