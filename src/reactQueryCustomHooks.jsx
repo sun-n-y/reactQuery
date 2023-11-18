@@ -10,7 +10,21 @@ export const useFetchTasks = () => {
   return { isLoading, isError, data };
 };
 
-export const useCreateTask = () => {};
+export const useCreateTask = () => {
+  const queryClient = useQueryClient();
+
+  const { mutate: createTask, isLoading } = useMutation({
+    mutationFn: (taskTitle) => customFetch.post('/', { title: taskTitle }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      toast.success('task added');
+    },
+    onError: (error) => {
+      toast.error(error.response.data.msg);
+    },
+  });
+  return { createTask, isLoading };
+};
 
 export const useEditTask = () => {
   const queryClient = useQueryClient();
@@ -32,7 +46,7 @@ export const useEditTask = () => {
 export const useDeleteTask = () => {
   const queryClient = useQueryClient();
 
-  const { mutate: deleteTask, isLoading } = useMutation({
+  const { mutate: deleteTask, isLoading: deleteTaskLoading } = useMutation({
     mutationFn: (taskId) => customFetch.delete(`/${taskId}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
@@ -42,5 +56,5 @@ export const useDeleteTask = () => {
       toast.error(error.response.data.msg);
     },
   });
-  return { deleteTask, isLoading };
+  return { deleteTask, deleteTaskLoading };
 };

@@ -3,7 +3,7 @@ import { useDeleteTask, useEditTask } from './reactQueryCustomHooks';
 const SingleItem = ({ item }) => {
   const { editTask } = useEditTask();
 
-  const { isLoading, deleteTask } = useDeleteTask();
+  const { deleteTaskLoading, deleteTask } = useDeleteTask();
 
   return (
     <div className="single-item">
@@ -23,7 +23,7 @@ const SingleItem = ({ item }) => {
       <button
         className="btn remove-btn"
         type="button"
-        disabled={isLoading}
+        disabled={deleteTaskLoading}
         onClick={() => deleteTask(item.id)}
       >
         delete
