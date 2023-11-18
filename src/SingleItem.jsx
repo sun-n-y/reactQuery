@@ -1,9 +1,20 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import customFetch from './utils';
+import { toast } from 'react-toastify';
 
 const SingleItem = ({ item }) => {
-  const { mutate: EditTask } = useMutation({
-    mutationFn: () => customFetch.patch(`/${item.id}`, {}),
+  const queryClient = useQueryClient();
+
+  const { mutate: editTask } = useMutation({
+    mutationFn: ({ taskId, isDone }) =>
+      customFetch.patch(`/${taskId}`, { isDone }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      toast.success('task edited');
+    },
+    onError: (error) => {
+      toast.error(error.response.data.msg);
+    },
   });
 
   return (
@@ -11,7 +22,7 @@ const SingleItem = ({ item }) => {
       <input
         type="checkbox"
         checked={item.isDone}
-        onChange={() => console.log('edit task')}
+        onChange={() => editTask({ taskId: item.id, isDone: !item.isDone })}
       />
       <p
         style={{
@@ -31,4 +42,5 @@ const SingleItem = ({ item }) => {
     </div>
   );
 };
+
 export default SingleItem;
